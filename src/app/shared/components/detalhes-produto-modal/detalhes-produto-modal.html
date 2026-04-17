@@ -1,49 +1,86 @@
 <div class="modal-backdrop" (click)="fecharModal()">
-    <div class="modal-content-detalhes" (click)="$event.stopPropagation()">
-
-        <div class="close">
-            <button class="close-button" (click)="fecharModal()" aria-label="Fechar">&times;</button>
-        </div>
-
-        <div class="modal-container-flex" *ngIf="item">
-            <div class="modal-imagem">
-                <img [src]="item.urlImagem" [alt]="item.nome">
-            </div>
-
-            <div class="divisao"></div>
-
-            <div class="modal-detalhes">
-                <div style="display: grid; align-items: start; text-align: start;">
-                    <h2 class="detalhes-nome">{{ item.nome }}</h2>
-                    <p class="detalhes-descricao">{{ item.descricao }}</p>
-
-                    <div class="detalhes-preco">
-                        <span *ngIf="item.isSugestaoChefe" class="preco-original">{{ item.precoBase | currency:'BRL'
-                            }}</span>
-                        <span class="preco-final">{{ (item.isSugestaoChefe ? item.precoComDesconto : item.precoBase) |
-                            currency:'BRL' }}</span>
-                        <span *ngIf="item.isSugestaoChefe" class="tag-desconto">-20%</span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="observacao" class="form-label">Observações (opcional)</label>
-                    <textarea id="observacao" [(ngModel)]="observacao" class="form-input" rows="3"
-                        placeholder="Ex: Sem cebola, ponto da carne, etc."></textarea>
-                </div>
-
-                <div class="modal-acoes">
-                    <div class="quantidade-controle">
-                        <button (click)="decrementarQuantidade()" [disabled]="quantidade === 1">-</button>
-                        <span>{{ quantidade }}</span>
-                        <button (click)="incrementarQuantidade()">+</button>
-                    </div>
-
-                    <button class="btn-adicionar" (click)="adicionarAoCarrinho()">
-                        Adicionar
-                    </button>
-                </div>
-            </div>
-        </div>
+  <div class="modal-content-detalhes" (click)="$event.stopPropagation()">
+    <div class="close">
+      <button class="close-button" (click)="fecharModal()" aria-label="Fechar">
+        &times;
+      </button>
     </div>
+
+    <div class="modal-container-flex" *ngIf="item">
+      <div class="modal-imagem">
+        <img [src]="item.urlImagem" [alt]="item.nome" />
+      </div>
+
+      <div class="divisao"></div>
+
+      <div class="modal-detalhes">
+        <div style="display: grid; align-items: start; text-align: start">
+          <h2 class="detalhes-nome">{{ item.nome }}</h2>
+          <p class="detalhes-descricao">{{ item.descricao }}</p>
+
+          <div class="detalhes-preco">
+            <span *ngIf="item.isSugestaoChefe" class="preco-original"
+              >{{ item.precoBase | currency:'BRL' }}</span
+            >
+            <span class="preco-final"
+              >{{ (item.isSugestaoChefe ? item.precoComDesconto :
+              item.precoBase) | currency:'BRL' }}</span
+            >
+            <span *ngIf="item.isSugestaoChefe" class="tag-desconto">-20%</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="observacao" class="form-label"
+            >Observações (opcional)</label
+          >
+          <textarea
+            id="observacao"
+            [(ngModel)]="observacao"
+            class="form-input"
+            rows="3"
+            placeholder="Ex: Sem cebola, ponto da carne, etc."
+          ></textarea>
+        </div>
+
+        <div class="modal-acoes">
+          <div class="quantidade-controle">
+            <button
+              (click)="decrementarQuantidade()"
+              [disabled]="quantidade === 1"
+            >
+              -
+            </button>
+            <span>{{ quantidade }}</span>
+            <button (click)="incrementarQuantidade()">+</button>
+          </div>
+
+          <button
+            class="btn-adicionar"
+            (click)="adicionarAoCarrinho()"
+            [disabled]="isIncompativel()"
+            [style.opacity]="isIncompativel() ? '0.5' : '1'"
+            [style.cursor]="isIncompativel() ? 'not-allowed' : 'pointer'"
+          >
+            {{ isIncompativel() ? 'Bloqueado' : 'Adicionar' }}
+          </button>
+        </div>
+
+        <div
+          *ngIf="isIncompativel()"
+          style="
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            text-align: right;
+          "
+        >
+          <small
+            >Este item é de um período diferente dos itens que já estão no seu
+            carrinho.</small
+          >
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

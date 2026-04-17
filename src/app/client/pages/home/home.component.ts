@@ -365,6 +365,8 @@ export class HomeComponent implements OnInit {
       numeroPessoas: this.reservaResumo.pessoas,
     };
 
+    console.log('DTO de reserva para usuário logado:', dto);
+
     this.reservaService.create(dto).subscribe({
       next: (reserva) => {
         this.reservando = false;

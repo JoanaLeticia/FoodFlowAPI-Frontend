@@ -57,7 +57,7 @@
             <i class="fa-solid fa-location-dot item-icone"></i>
             <div class="item-info">
               <strong>{{ endereco.logradouro }}, {{ endereco.numero }}</strong>
-              <span>{{ endereco.bairro }} - {{ endereco.municipio.nome }}/{{ endereco.municipio.estado.sigla }}</span>
+              <span>{{ endereco.bairro }} - {{ endereco.municipio?.nome }}/{{ endereco.municipio?.estado?.sigla }}</span>
             </div>
             <button class="btn-acao"><i class="fa-solid fa-trash"></i></button>
           </div>

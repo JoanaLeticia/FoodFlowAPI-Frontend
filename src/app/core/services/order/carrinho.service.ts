@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, Observable, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  Observable,
+  switchMap,
+} from 'rxjs';
 import { ItemCardapio } from '../../models/item-cardapio.model';
 import { AuthService } from '../../../auth/auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CarrinhoService {
   private readonly CARRINHO_PREFIX = 'carrinho_';
@@ -13,15 +18,18 @@ export class CarrinhoService {
   carrinho$: Observable<ItemCardapio[]> = this.carrinhoSubject.asObservable();
 
   constructor(private authService: AuthService) {
-    this.authService.getUsuarioLogado().pipe(
-      distinctUntilChanged(),
-      switchMap(usuario => {
-        const userId = usuario?.id || 'anonimo';
-        return this.loadCartForUser(userId);
-      })
-    ).subscribe(carrinho => {
-      this.carrinhoSubject.next(carrinho);
-    });
+    this.authService
+      .getUsuarioLogado()
+      .pipe(
+        distinctUntilChanged(),
+        switchMap((usuario) => {
+          const userId = usuario?.id || 'anonimo';
+          return this.loadCartForUser(userId);
+        }),
+      )
+      .subscribe((carrinho) => {
+        this.carrinhoSubject.next(carrinho);
+      });
   }
 
   private getCartKey(userId: string | number): string {
@@ -30,10 +38,10 @@ export class CarrinhoService {
 
   private loadCartForUser(userId: string | number): Observable<ItemCardapio[]> {
     const carrinho = this.obterCarrinhoLocal(userId);
-    return new Observable(observer => {
+    return new Observable((observer) => {
       observer.next(carrinho);
       observer.complete();
-    })
+    });
   }
 
   private obterCarrinhoLocal(userId: string | number): ItemCardapio[] {
@@ -41,7 +49,10 @@ export class CarrinhoService {
     return carrinho ? JSON.parse(carrinho) : [];
   }
 
-  private salvarCarrinho(userId: string | number, carrinho: ItemCardapio[]): void {
+  private salvarCarrinho(
+    userId: string | number,
+    carrinho: ItemCardapio[],
+  ): void {
     localStorage.setItem(this.getCartKey(userId), JSON.stringify(carrinho));
     this.carrinhoSubject.next(carrinho);
   }
@@ -55,17 +66,38 @@ export class CarrinhoService {
     const carrinhoAnonimo = this.obterCarrinhoLocal('anonimo');
 
     if (carrinhoAnonimo.length > 0) {
-      carrinhoAnonimo.forEach(item => {
+      carrinhoAnonimo.forEach((item) => {
         this.adicionarItemParaUsuario(userId, item);
       });
       this.limparCarrinhoEspecifico('anonimo');
     }
   }
 
+  isItemIncompativel(periodoNovoItem: any): boolean {
+    const carrinhoAtual = this.carrinhoSubject.value;
+
+    if (carrinhoAtual.length === 0) return false;
+
+    const periodoDoCarrinho = carrinhoAtual[0].periodo;
+
+    return String(periodoNovoItem) !== String(periodoDoCarrinho);
+  }
+
   adicionarItem(item: ItemCardapio): void {
     const userId = this.getCurrentUserId();
     const carrinho = this.obterCarrinhoLocal(userId);
-    const itemExistente = carrinho.find(i => i.id === item.id);
+
+    if (carrinho.length > 0) {
+      const periodoAtual = carrinho[0].periodo;
+      if (String(item.periodo) !== String(periodoAtual)) {
+        alert(
+          `Não é possível misturar itens! O seu carrinho já possui pratos do período: ${periodoAtual}. Finalize o pedido ou esvazie o carrinho.`,
+        );
+        return;
+      }
+    }
+
+    const itemExistente = carrinho.find((i) => i.id === item.id);
 
     if (itemExistente) {
       itemExistente.quantidade++;
@@ -79,7 +111,7 @@ export class CarrinhoService {
   atualizarQuantidade(itemId: number, quantidade: number): void {
     const userId = this.getCurrentUserId();
     const carrinho = this.obterCarrinhoLocal(userId);
-    const item = carrinho.find(i => i.id === itemId);
+    const item = carrinho.find((i) => i.id === itemId);
 
     if (item) {
       if (quantidade < 1) {
@@ -93,8 +125,9 @@ export class CarrinhoService {
 
   removerItem(itemId: number): void {
     const userId = this.getCurrentUserId();
-    const carrinho = this.obterCarrinhoLocal(userId)
-      .filter(item => item.id !== itemId);
+    const carrinho = this.obterCarrinhoLocal(userId).filter(
+      (item) => item.id !== itemId,
+    );
     this.salvarCarrinho(userId, carrinho);
   }
 
@@ -104,18 +137,23 @@ export class CarrinhoService {
   }
 
   getTotalItens(): number {
-    return this.carrinhoSubject.value.reduce((total, item) => total + item.quantidade, 0);
+    return this.carrinhoSubject.value.reduce(
+      (total, item) => total + item.quantidade,
+      0,
+    );
   }
 
   getTotalValor(): number {
-    return parseFloat(this.carrinhoSubject.value
-      .reduce((total, item) => total + (item.precoBase * item.quantidade), 0)
-      .toFixed(2));
+    return parseFloat(
+      this.carrinhoSubject.value
+        .reduce((total, item) => total + item.precoBase * item.quantidade, 0)
+        .toFixed(2),
+    );
   }
 
   adicionarItemParaUsuario(userId: string | number, item: ItemCardapio): void {
     const carrinho = this.obterCarrinhoLocal(userId);
-    const itemExistente = carrinho.find(i => i.id === item.id);
+    const itemExistente = carrinho.find((i) => i.id === item.id);
 
     if (itemExistente) {
       itemExistente.quantidade += item.quantidade || 1;
@@ -137,5 +175,4 @@ export class CarrinhoService {
   getItens(): ItemCardapio[] {
     return [...this.carrinhoSubject.value];
   }
-
 }

@@ -1,61 +1,87 @@
 <div class="modal-backdrop" (click)="fecharModal()">
-    <div class="modal-content" style="max-width: 650px;" (click)="$event.stopPropagation()">
-        <div class="modal-header" style="display: flex; align-items: center; justify-content: space-between;">
-            <h2 class="modal-title">Detalhes do Pedido #{{ pedido?.id }}</h2>
-            <button class="close-button" (click)="fecharModal()">&times;</button>
-        </div>
-        <div class="modal-body-detalhes" *ngIf="pedido">
-            <div class="detalhes-grid">
-                <div class="detalhes-coluna">
-                    <h3 class="section-title">Resumo do Pedido</h3>
-                    <div class="info-bloco">
-                        <p><strong>Data:</strong> {{ pedido.dataPedido | date:'dd/MM/yyyy \'às\' HH:mm' }}</p>
-                        <p><strong>Status:</strong> <span class="status-badge"
-                                [ngClass]="getStatusClass(pedido.status?.nome || '')">{{ pedido.status?.nome }}</span>
-                        </p>
-                        <p><strong>Valor Total:</strong> {{ pedido.valorTotal | currency:'BRL' }}</p>
-                    </div>
-
-                    <h3 class="section-title">Itens do Pedido</h3>
-                    <div class="itens-lista">
-                        <div *ngFor="let item of pedido.itens" class="item-detalhe">
-                            <span>{{ item.quantidade }}x {{ item.nome }}</span>
-                            <span>{{ (item.precoBase * item.quantidade) | currency:'BRL' }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="detalhes-coluna">
-                    <h3 class="section-title">Detalhes do Atendimento</h3>
-                    <div class="info-bloco" *ngIf="pedido.atendimento as atendimento">
-                        <p><strong>Tipo:</strong> {{ atendimento.tipo?.nome }}</p>
-
-                        <ng-container [ngSwitch]="atendimento.tipo?.id">
-
-                            <p *ngSwitchCase="1">
-                                <strong>Retirada em nome de:</strong> {{ atendimento.nomeRetirada }}
-                            </p>
-
-                            <address *ngSwitchCase="2">
-                                <strong>Endereço de Entrega:</strong><br>
-                                {{ atendimento.enderecoEntrega?.logradouro }}, {{ atendimento.enderecoEntrega?.numero
-                                }}<br>
-                                {{ atendimento.enderecoEntrega?.bairro }}
-                            </address>
-
-                            <div *ngSwitchCase="3">
-                                <p><strong>Parceiro:</strong> {{ atendimento.parceiro?.nome }}</p>
-                                <address>
-                                    <strong>Endereço de Entrega:</strong><br>
-                                    {{ atendimento.enderecoEntrega?.logradouro }}, {{
-                                    atendimento.enderecoEntrega?.numero }}<br>
-                                    {{ atendimento.enderecoEntrega?.bairro }}
-                                </address>
-                            </div>
-                        </ng-container>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div
+    class="modal-content"
+    style="max-width: 650px"
+    (click)="$event.stopPropagation()"
+  >
+    <div
+      class="modal-header"
+      style="display: flex; align-items: center; justify-content: space-between"
+    >
+      <h2 class="modal-title">Detalhes do Pedido #{{ pedido?.id }}</h2>
+      <button class="close-button" (click)="fecharModal()">&times;</button>
     </div>
+    <div class="modal-body-detalhes" *ngIf="pedido">
+      <div class="detalhes-grid">
+        <div class="detalhes-coluna">
+          <h3 class="section-title">Resumo do Pedido</h3>
+          <div class="info-bloco">
+            <p>
+              <strong>Data:</strong> {{ pedido.dataPedido | date:'dd/MM/yyyy
+              \'às\' HH:mm' }}
+            </p>
+            <p>
+              <strong>Status:</strong>
+              <span
+                class="status-badge"
+                [ngClass]="getStatusClass(pedido.status)"
+                >{{ formatarStatus(pedido.status) }}</span
+              >
+            </p>
+            <p>
+              <strong>Valor Total:</strong> {{ pedido.valorTotal |
+              currency:'BRL' }}
+            </p>
+          </div>
+
+          <h3 class="section-title">Itens do Pedido</h3>
+          <div class="itens-lista">
+            <div *ngFor="let item of pedido.itens" class="item-detalhe">
+              <span>{{ item.quantidade }}x {{ item.nome }}</span>
+
+              <span
+                >{{ (item.precoBase * item.quantidade) | currency:'BRL' }}</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="detalhes-coluna">
+          <h3 class="section-title">Detalhes do Atendimento</h3>
+          <div class="info-bloco" *ngIf="pedido.atendimento as atendimento">
+            <p>
+              <strong>Tipo:</strong> {{
+              formatarTipoAtendimento(atendimento.tipo) }}
+            </p>
+
+            <ng-container [ngSwitch]="atendimento.tipo">
+              <p *ngSwitchCase="'PRESENCIAL'">
+                <strong>Retirada em nome de:</strong> {{
+                atendimento.nomeRetirada }}
+              </p>
+
+              <address *ngSwitchCase="'DELIVERY_PROPRIO'">
+                <strong>Endereço de Entrega:</strong><br />
+                {{ atendimento.enderecoEntrega?.logradouro }}, {{
+                atendimento.enderecoEntrega?.numero }}<br />
+                {{ atendimento.enderecoEntrega?.bairro }}
+              </address>
+
+              <div *ngSwitchCase="'DELIVERY_APLICATIVO'">
+                <p>
+                  <strong>Parceiro:</strong> {{ atendimento.parceiro?.nome }}
+                </p>
+                <address>
+                  <strong>Endereço de Entrega:</strong><br />
+                  {{ atendimento.enderecoEntrega?.logradouro }}, {{
+                  atendimento.enderecoEntrega?.numero }}<br />
+                  {{ atendimento.enderecoEntrega?.bairro }}
+                </address>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

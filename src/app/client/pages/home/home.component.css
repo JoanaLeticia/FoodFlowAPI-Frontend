@@ -253,7 +253,7 @@
 
 .btn-addcarrinho {
     margin-top: 20px;
-    width: 230px;
+    width: 250px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -387,7 +387,7 @@
         color: #404040;
         justify-content: center;
         margin: 25px auto 0;
-        width: 210px;
+        width: 250px;
         padding: 15px 25px;
         border: 1px solid #D9D9D9;
         border-radius: 8px;

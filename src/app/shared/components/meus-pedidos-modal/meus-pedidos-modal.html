@@ -1,33 +1,45 @@
 <div class="modal-backdrop" (click)="fecharModal()">
-    <div class="modal-content" style="max-width: 700px;" (click)="$event.stopPropagation()">
-        <div class="modal-header" style="display: flex; align-items: center; justify-content: space-between;">
-            <h2 class="modal-title">Meus Pedidos</h2>
-            <button class="close-button" (click)="fecharModal()">&times;</button>
-        </div>
-        <div class="modal-body-pedidos">
-            <div *ngIf="carregando" class="estado-feedback">
-                <span class="spinner"></span> Carregando seus pedidos...
-            </div>
-            <div *ngIf="!carregando && pedidos.length === 0" class="estado-feedback">
-                Você ainda não fez nenhum pedido.
-            </div>
-            <div *ngIf="!carregando && pedidos.length > 0" class="pedidos-lista">
-                <div *ngFor="let pedido of pedidos" class="pedido-item">
-                    <div class="pedido-info">
-                        <strong>Pedido #{{ pedido.id }}</strong>
-                        <span>Data: {{ pedido.dataPedido | date:'dd/MM/yyyy' }}</span>
-                    </div>
-                    <div class="pedido-total">
-                        <span>{{ pedido.valorTotal | currency:'BRL' }}</span>
-                    </div>
-                    <div class="pedido-status">
-                        <span class="status-badge" [ngClass]="getStatusClass(pedido.status?.nome || '')">
-                            {{ pedido.status?.nome }}
-                        </span>
-                    </div>
-                    <button class="btn-detalhes" (click)="onVerDetalhes(pedido)">Ver Detalhes</button>
-                </div>
-            </div>
-        </div>
+  <div
+    class="modal-content"
+    style="max-width: 700px"
+    (click)="$event.stopPropagation()"
+  >
+    <div
+      class="modal-header"
+      style="display: flex; align-items: center; justify-content: space-between"
+    >
+      <h2 class="modal-title">Meus Pedidos</h2>
+      <button class="close-button" (click)="fecharModal()">&times;</button>
     </div>
+    <div class="modal-body-pedidos">
+      <div *ngIf="carregando" class="estado-feedback">
+        <span class="spinner"></span> Carregando seus pedidos...
+      </div>
+      <div *ngIf="!carregando && pedidos.length === 0" class="estado-feedback">
+        Você ainda não fez nenhum pedido.
+      </div>
+      <div *ngIf="!carregando && pedidos.length > 0" class="pedidos-lista">
+        <div *ngFor="let pedido of pedidos" class="pedido-item">
+          <div class="pedido-info">
+            <strong>Pedido #{{ pedido.id }}</strong>
+            <span>Data: {{ pedido.dataPedido | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="pedido-total">
+            <span>{{ pedido.valorTotal | currency:'BRL' }}</span>
+          </div>
+          <div class="pedido-status">
+            <span
+              class="status-badge"
+              [ngClass]="getStatusClass(pedido.status)"
+            >
+              {{ formatarStatus(pedido.status) }}
+            </span>
+          </div>
+          <button class="btn-detalhes" (click)="onVerDetalhes(pedido)">
+            Ver Detalhes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

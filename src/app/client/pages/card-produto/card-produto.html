@@ -1,10 +1,8 @@
-<div class="prato-cardapio">
-  <img [src]="itemCardapio.urlImagem" [alt]="itemCardapio.nome">
+<div class="prato-cardapio" [class.card-bloqueado]="isIncompativel()">
+  <img [src]="itemCardapio.urlImagem" [alt]="itemCardapio.nome" />
 
   <div class="texto-prato">
-    <div class="nome-prato">
-      {{ itemCardapio.nome }}
-    </div>
+    <div class="nome-prato">{{ itemCardapio.nome }}</div>
 
     <div class="linha-decorativa"></div>
 
@@ -14,12 +12,22 @@
       </p>
 
       <p class="valor-prato">
-        {{ (itemCardapio.isSugestaoChefe ? itemCardapio.precoComDesconto : itemCardapio.precoBase) | currency:'R$' }}
+        {{ (itemCardapio.isSugestaoChefe ? itemCardapio.precoComDesconto :
+        itemCardapio.precoBase) | currency:'R$' }}
       </p>
     </div>
 
-    <button class="btn-addcarrinho-cardapio" (click)="onAdicionar($event)">
-      <i class="fa-solid fa-cart-shopping"></i>Adicionar ao Carrinho
+    <button
+      class="btn-addcarrinho-cardapio"
+      (click)="onAdicionar($event)"
+      [disabled]="isIncompativel()"
+      [title]="isIncompativel() ? 'Este item pertence a um período diferente do seu carrinho' : ''"
+    >
+      <i
+        class="fa-solid"
+        [ngClass]="isIncompativel() ? 'fa-lock' : 'fa-cart-shopping'"
+      ></i>
+      {{ isIncompativel() ? 'Indisponível' : 'Adicionar ao Carrinho' }}
     </button>
   </div>
 </div>

@@ -5,7 +5,7 @@ import { Telefone } from "./telefone.model";
 export class Cliente {
     id!: number;
     nome!: string;
-    login!: string;
+    email!: string;
     senha?: string;
     listaTelefone: Telefone[] = [];
     listaEndereco: Endereco[] = [];

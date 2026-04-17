@@ -91,3 +91,24 @@
   background-color: #182758;
   color: #fff;
 }
+
+.btn-addcarrinho-cardapio:disabled {
+  background-color: #f5f5f5;
+  color: #a0a0a0;
+  border-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.btn-addcarrinho-cardapio:disabled:hover {
+  background-color: #f5f5f5;
+  color: #a0a0a0;
+}
+
+/* Deixa o card levemente opaco se estiver bloqueado */
+.card-bloqueado {
+  opacity: 0.7;
+}
+
+.card-bloqueado img {
+  filter: grayscale(40%);
+}

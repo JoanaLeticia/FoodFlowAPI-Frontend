@@ -8,7 +8,7 @@ import { PedidoService } from '../../../core/services/order/pedido.service';
   standalone: true,
   imports: [CommonModule, CurrencyPipe, DatePipe],
   templateUrl: './meus-pedidos-modal.html',
-  styleUrls: ['./meus-pedidos-modal.css']
+  styleUrls: ['./meus-pedidos-modal.css'],
 })
 export class MeusPedidosModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
@@ -17,7 +17,7 @@ export class MeusPedidosModalComponent implements OnInit {
   pedidos: Pedido[] = [];
   carregando = true;
 
-  constructor(private pedidoService: PedidoService) { }
+  constructor(private pedidoService: PedidoService) {}
 
   ngOnInit(): void {
     this.pedidoService.getMeusPedidos().subscribe({
@@ -28,12 +28,26 @@ export class MeusPedidosModalComponent implements OnInit {
       error: (err) => {
         console.error('Erro ao buscar pedidos:', err);
         this.carregando = false;
-      }
+      },
     });
   }
 
-  getStatusClass(status: string): string {
-    return 'status-' + status.toLowerCase().replace('_', '-');
+  getStatusClass(status: any): string {
+    if (status === undefined || status === null) return 'status-indefinido';
+
+    return 'status-' + String(status).toLowerCase().replace('_', '-');
+  }
+
+  formatarStatus(status: any): string {
+    if (!status) return '';
+    const dicionario: { [key: string]: string } = {
+      PENDENTE: 'Pendente',
+      CONFIRMADO: 'Confirmado',
+      EM_PREPARO: 'Em Preparo',
+      CONCLUIDO: 'Concluído',
+      CANCELADO: 'Cancelado',
+    };
+    return dicionario[status] || status;
   }
 
   fecharModal() {

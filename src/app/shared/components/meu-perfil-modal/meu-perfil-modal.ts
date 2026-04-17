@@ -50,7 +50,7 @@ export class MeuPerfilModalComponent implements OnInit {
         if (cliente) {
           this.dadosPessoaisForm.patchValue({
             nome: cliente.nome,
-            email: cliente.login
+            email: cliente.email
           });
         }
       },

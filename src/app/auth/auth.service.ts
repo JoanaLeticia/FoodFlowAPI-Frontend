@@ -1,6 +1,15 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, of, tap, throwError } from 'rxjs';
+
+import {
+  BehaviorSubject,
+  catchError,
+  map,
+  Observable,
+  of,
+  tap,
+  throwError,
+} from 'rxjs';
 import { Usuario } from '../core/models/usuario.model';
 import { LocalStorageService } from '../core/services/local-storage.service';
 import { Cliente } from '../core/models/cliente.model';
@@ -38,12 +47,11 @@ export interface RegisterResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   private baseURL: string = 'http://localhost:5009/api/auth/login';
-  private clienteURL: string = 'http://localhost:5009/api/clientes'
+  private clienteURL: string = 'http://localhost:5009/api/clientes';
   private tokenKey = 'jwt_token';
   private usuarioLogadoKey = 'usuario_logado';
   private usuarioLogadoSubject = new BehaviorSubject<Usuario | null>(null);
@@ -54,11 +62,9 @@ export class AuthService {
     private http: HttpClient,
     private localStorageService: LocalStorageService,
     private jwtHelper: JwtHelperService,
-    private injector: Injector
+    private injector: Injector,
   ) {
-
     this.initUsuarioLogado();
-
   }
 
   private initUsuarioLogado() {
@@ -78,28 +84,32 @@ export class AuthService {
     const params = {
       login: email,
       senha: senha,
-      perfil: 2
-    }
+      perfil: 2,
+    };
 
-    return this.http.post(`${this.baseURL}`, params, { observe: 'response' }).pipe(
-      tap((res: any) => {
-        const authToken = res.headers.get('Authorization') ?? '';
-        if (authToken) {
-          this.setToken(authToken);
-          const usuarioLogado = res.body;
+    return this.http
+      .post(`${this.baseURL}`, params, { observe: 'response' })
+      .pipe(
+        tap((res: any) => {
+          const authToken = res.headers.get('Authorization') ?? '';
+          if (authToken) {
+            this.setToken(authToken);
+            const usuarioLogado = res.body.usuario
+              ? res.body.usuario
+              : res.body;
 
-          if (usuarioLogado) {
-            const carrinhoService = this.injector.get(CarrinhoService);
+            if (usuarioLogado) {
+              const carrinhoService = this.injector.get(CarrinhoService);
 
-            carrinhoService.transferirCarrinhoParaUsuario(usuarioLogado.id);
+              carrinhoService.transferirCarrinhoParaUsuario(usuarioLogado.id);
 
-            this.setUsuarioLogado(usuarioLogado);
-            this.usuarioLogadoSubject.next(usuarioLogado);
+              this.setUsuarioLogado(usuarioLogado);
+              this.usuarioLogadoSubject.next(usuarioLogado);
+            }
           }
-        }
-      }),
-      map((res: any) => res.body)
-    );
+        }),
+        map((res: any) => res.body),
+      );
   }
 
   getUsuarioNome(): string | null {
@@ -111,32 +121,37 @@ export class AuthService {
     const params = {
       login: email,
       senha: senha,
-      perfil: 1
-    }
+      perfil: 1,
+    };
 
-    return this.http.post(`${this.baseURL}`, params, { observe: 'response' }).pipe(
-      tap((res: any) => {
-        const authToken = res.headers.get('Authorization') ?? '';
-        if (authToken) {
-          this.setAdminToken(authToken); // Novo método para token admin
-          const usuarioLogado = res.body;
-          if (usuarioLogado) {
-            this.setUsuarioLogado(usuarioLogado);
-            this.usuarioLogadoSubject.next(usuarioLogado);
+    return this.http
+      .post(`${this.baseURL}`, params, { observe: 'response' })
+      .pipe(
+        tap((res: any) => {
+          const authToken = res.headers.get('Authorization') ?? '';
+          if (authToken) {
+            this.setAdminToken(authToken); // Novo método para token admin
+            const usuarioLogado = res.body.usuario
+              ? res.body.usuario
+              : res.body;
+
+            if (usuarioLogado) {
+              this.setUsuarioLogado(usuarioLogado);
+              this.usuarioLogadoSubject.next(usuarioLogado);
+            }
           }
-        }
-      }),
-      catchError(error => {
-        console.error('Login admin failed:', error);
-        return throwError(() => error);
-      })
-    );
+        }),
+        catchError((error) => {
+          console.error('Login admin failed:', error);
+          return throwError(() => error);
+        }),
+      );
   }
 
   logoutCompleto(): void {
     // Remove todos os tokens e dados de autenticação
-    this.removeToken();        // Token de cliente
-    this.removeAdminToken();   // Token de admin
+    this.removeToken(); // Token de cliente
+    this.removeAdminToken(); // Token de admin
     this.removeUsuarioLogado(); // Dados do usuário
 
     // Notifica todos os subscribers que não há mais usuário logado
@@ -190,21 +205,31 @@ export class AuthService {
 
   // auth.service.ts
   getClienteCompleto(): Observable<Cliente | null> {
-    const usuario = this.localStorageService.getItem(this.usuarioLogadoKey);
-    console.log('Usuário no getClienteCompleto:', usuario); // Log temporário
+    // 1. Pega o token guardado
+    const token = this.getToken();
 
-    if (!usuario || !usuario.id) {
-      console.warn('Usuário não encontrado ou sem ID no localStorage');
+    if (!token) {
+      console.warn('Token não encontrado no localStorage');
       return of(null);
     }
 
-    return this.http.get<Cliente>(`${this.clienteURL}/${usuario.id}`).pipe(
-      tap(cliente => console.log('Cliente recebido do backend: ', cliente)),
-      catchError(error => {
-        console.error('Erro ao buscar cliente: ', error);
-        return of(null);
-      })
-    );
+    // 2. Prepara o crachá de autorização para o C#
+    const headers = new HttpHeaders({
+      Authorization: token
+    });
+
+    // 3. Chama a nova rota segura (sem passar o ID na URL!)
+    return this.http
+      .get<Cliente>(`${this.clienteURL}/meu-perfil`, { headers })
+      .pipe(
+        tap((cliente) =>
+          console.log('Cliente recebido da nova rota segura: ', cliente),
+        ),
+        catchError((error) => {
+          console.error('Erro ao buscar cliente: ', error);
+          return of(null);
+        }),
+      );
   }
 
   getToken(): string | null {
@@ -227,13 +252,14 @@ export class AuthService {
     try {
       return this.jwtHelper.isTokenExpired(tokenToCheck);
     } catch (error) {
-      console.error("Token inválido", error);
+      console.error('Token inválido', error);
       return true;
     }
   }
 
   getUsuariologadoSnapshot(): Usuario | null {
-    return this.localStorageService.getItem(this.usuarioLogadoKey);
+    const dados = this.localStorageService.getItem(this.usuarioLogadoKey);
+    return dados?.usuario ? dados.usuario : dados;
   }
 
   register(cliente: ClienteDTO): Observable<RegisterResponse> {
@@ -247,12 +273,12 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     const clienteToken = this.getToken();
-    const clienteTokenValido = !!clienteToken && !this.isTokenExpired(clienteToken);
+    const clienteTokenValido =
+      !!clienteToken && !this.isTokenExpired(clienteToken);
 
     const adminToken = this.getAdminToken();
     const adminTokenValido = !!adminToken && !this.isTokenExpired(adminToken);
 
     return clienteTokenValido || adminTokenValido;
   }
-
 }
