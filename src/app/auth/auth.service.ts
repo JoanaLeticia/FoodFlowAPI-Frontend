@@ -78,7 +78,7 @@ export class AuthService {
     const params = {
       login: email,
       senha: senha,
-      perfil: '2'
+      perfil: 2
     }
 
     return this.http.post(`${this.baseURL}`, params, { observe: 'response' }).pipe(
@@ -111,7 +111,7 @@ export class AuthService {
     const params = {
       login: email,
       senha: senha,
-      perfil: '1'
+      perfil: 1
     }
 
     return this.http.post(`${this.baseURL}`, params, { observe: 'response' }).pipe(
