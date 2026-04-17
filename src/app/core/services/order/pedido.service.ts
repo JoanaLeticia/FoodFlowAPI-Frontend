@@ -7,7 +7,7 @@ import { Pedido } from '../../models/pedido.model';
   providedIn: 'root'
 })
 export class PedidoService {
-  private baseUrl = 'http://localhost:8080/pedidos';
+  private baseUrl = 'http://localhost:5009/api/pedidos';
 
   constructor(private httpClient: HttpClient) { }
 

@@ -7,7 +7,7 @@ import { Telefone } from '../../models/telefone.model';
     providedIn: 'root'
   })
 export class TelefoneService {
-    private baseUrl = 'http://localhost:8080/telefones';
+    private baseUrl = 'http://localhost:5009/api/telefones';
   
     constructor(private httpClient: HttpClient) {  }
   

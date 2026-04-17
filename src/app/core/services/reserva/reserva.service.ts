@@ -34,7 +34,7 @@ export interface DisponibilidadeMesa {
   providedIn: 'root'
 })
 export class ReservaService {
-  private baseUrl = 'http://localhost:8080/reservas';
+  private baseUrl = 'http://localhost:5009/api/reservas';
 
   constructor(private http: HttpClient) { }
 

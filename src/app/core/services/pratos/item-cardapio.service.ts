@@ -17,7 +17,7 @@ interface ItemCardapioSimplificado {
     providedIn: 'root'
 })
 export class ItemCardapioService {
-    private baseUrl = 'http://localhost:8080/itens-cardapio';
+    private baseUrl = 'http://localhost:5009/api/itens-cardapio';
     http: any;
 
     constructor(private httpClient: HttpClient) { }

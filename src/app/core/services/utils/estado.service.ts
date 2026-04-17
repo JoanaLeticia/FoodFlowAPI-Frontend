@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class EstadoService {
-  private baseUrl = 'http://localhost:8080/estados';
+  private baseUrl = 'http://localhost:5009/api/estados';
 
   constructor(private httpClient: HttpClient) { }
 

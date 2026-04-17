@@ -13,7 +13,7 @@ export interface ParceiroDTO {
     providedIn: 'root'
 })
 export class ParceiroService {
-    private baseUrl = 'http://localhost:8080/parceiros';
+    private baseUrl = 'http://localhost:5009/api/parceiros';
 
     constructor(private httpClient: HttpClient) { }
 

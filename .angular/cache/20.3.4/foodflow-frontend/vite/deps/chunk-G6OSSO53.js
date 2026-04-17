@@ -1,13 +1,13 @@
 import {
   _animationsDisabled
-} from "./chunk-34FBJM5U.js";
+} from "./chunk-XZMCFYV6.js";
 import {
   MatCommonModule,
   _getEventTarget,
   isFakeMousedownFromScreenReader,
   isFakeTouchstartFromScreenReader,
   normalizePassiveListenerOptions
-} from "./chunk-2OWOFY4I.js";
+} from "./chunk-I5BCRQWR.js";
 import {
   _CdkPrivateStyleLoader
 } from "./chunk-6ZUIGG7Z.js";
@@ -646,6 +646,30 @@ var MatRipple = class _MatRipple {
   });
 })();
 
+// node_modules/@angular/material/fesm2022/ripple-module.mjs
+var MatRippleModule = class _MatRippleModule {
+  static ɵfac = function MatRippleModule_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _MatRippleModule)();
+  };
+  static ɵmod = ɵɵdefineNgModule({
+    type: _MatRippleModule,
+    imports: [MatCommonModule, MatRipple],
+    exports: [MatRipple, MatCommonModule]
+  });
+  static ɵinj = ɵɵdefineInjector({
+    imports: [MatCommonModule, MatCommonModule]
+  });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(MatRippleModule, [{
+    type: NgModule,
+    args: [{
+      imports: [MatCommonModule, MatRipple],
+      exports: [MatRipple, MatCommonModule]
+    }]
+  }], null, null);
+})();
+
 // node_modules/@angular/material/fesm2022/ripple-loader.mjs
 var eventListenerOptions = {
   capture: true
@@ -783,30 +807,6 @@ var MatRippleLoader = class _MatRippleLoader {
   }], () => [], null);
 })();
 
-// node_modules/@angular/material/fesm2022/ripple-module.mjs
-var MatRippleModule = class _MatRippleModule {
-  static ɵfac = function MatRippleModule_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _MatRippleModule)();
-  };
-  static ɵmod = ɵɵdefineNgModule({
-    type: _MatRippleModule,
-    imports: [MatCommonModule, MatRipple],
-    exports: [MatRipple, MatCommonModule]
-  });
-  static ɵinj = ɵɵdefineInjector({
-    imports: [MatCommonModule, MatCommonModule]
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(MatRippleModule, [{
-    type: NgModule,
-    args: [{
-      imports: [MatCommonModule, MatRipple],
-      exports: [MatRipple, MatCommonModule]
-    }]
-  }], null, null);
-})();
-
 export {
   _StructuralStylesLoader,
   RippleState,
@@ -815,7 +815,7 @@ export {
   RippleRenderer,
   MAT_RIPPLE_GLOBAL_OPTIONS,
   MatRipple,
-  MatRippleLoader,
-  MatRippleModule
+  MatRippleModule,
+  MatRippleLoader
 };
-//# sourceMappingURL=chunk-GXUWNQKJ.js.map
+//# sourceMappingURL=chunk-G6OSSO53.js.map

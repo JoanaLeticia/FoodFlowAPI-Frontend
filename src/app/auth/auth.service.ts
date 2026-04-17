@@ -42,8 +42,8 @@ export interface RegisterResponse {
 })
 export class AuthService {
 
-  private baseURL: string = 'http://localhost:8080/auth';
-  private clienteURL: string = 'http://localhost:8080/clientes'
+  private baseURL: string = 'http://localhost:5009/api/auth/login';
+  private clienteURL: string = 'http://localhost:5009/api/clientes'
   private tokenKey = 'jwt_token';
   private usuarioLogadoKey = 'usuario_logado';
   private usuarioLogadoSubject = new BehaviorSubject<Usuario | null>(null);

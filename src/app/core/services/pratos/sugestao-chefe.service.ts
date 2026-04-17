@@ -15,7 +15,7 @@ export interface SugestaoChefResponse {
   providedIn: 'root'
 })
 export class SugestaoChefeService {
-  private baseUrl = 'http://localhost:8080/sugestoes-chef';
+  private baseUrl = 'http://localhost:5009/api/sugestoes-chef';
 
   constructor(private http: HttpClient) { }
 

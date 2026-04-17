@@ -13,7 +13,7 @@ export interface Mesa {
   providedIn: 'root'
 })
 export class MesaService {
-  private baseUrl = 'http://localhost:8080/mesas';
+  private baseUrl = 'http://localhost:5009/api/mesas';
 
   constructor(private http: HttpClient) { }
 

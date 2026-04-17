@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AdminService {
-  private baseUrl = 'http://localhost:8080/administradores';
+  private baseUrl = 'http://localhost:5009/api/administradores';
 
   constructor(private httpClient: HttpClient) { }
 

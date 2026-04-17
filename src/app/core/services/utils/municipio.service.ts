@@ -10,7 +10,7 @@ import { Estado } from '../../models/estado.model';
   providedIn: 'root'
 })
 export class MunicipioService {
-  private baseUrl = 'http://localhost:8080/municipios';
+  private baseUrl = 'http://localhost:5009/api/municipios';
 
   constructor(private httpClient: HttpClient) { }
 
