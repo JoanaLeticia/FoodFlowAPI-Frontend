@@ -53,26 +53,128 @@
         </div>
 
         <div *ngIf="abaSelecionada === 'enderecos'">
-          <div *ngFor="let endereco of cliente?.listaEndereco" class="item-lista">
-            <i class="fa-solid fa-location-dot item-icone"></i>
-            <div class="item-info">
-              <strong>{{ endereco.logradouro }}, {{ endereco.numero }}</strong>
-              <span>{{ endereco.bairro }} - {{ endereco.municipio?.nome }}/{{ endereco.municipio?.estado?.sigla }}</span>
+
+          <div *ngIf="!mostrandoFormEndereco">
+            <div *ngFor="let endereco of cliente?.listaEndereco" class="item-lista">
+              <i class="fa-solid fa-location-dot item-icone"></i>
+              <div class="item-info">
+                <strong>{{ endereco.logradouro }}, {{ endereco.numero }}</strong>
+                <span>{{ endereco.bairro }} - {{ endereco.municipio?.nome }}/{{ endereco.municipio?.estado?.sigla
+                  }}</span>
+              </div>
+              <button class="btn-acao" (click)="excluirEndereco(endereco.id!)" [disabled]="salvando">
+                <i class="fa-solid fa-trash"></i>
+              </button>
             </div>
-            <button class="btn-acao"><i class="fa-solid fa-trash"></i></button>
+
+            <div *ngIf="cliente?.listaEndereco?.length === 0"
+              style="text-align: center; margin-bottom: 15px; color: #6b7280;">
+              Você ainda não possui endereços cadastrados.
+            </div>
+
+            <button class="btn-adicionar-novo" (click)="abrirFormEndereco()">+ Adicionar Novo Endereço</button>
           </div>
-          <button class="btn-adicionar-novo">+ Adicionar Novo Endereço</button>
+
+          <div *ngIf="mostrandoFormEndereco">
+            <h3 class="section-title">Novo Endereço</h3>
+
+            <form [formGroup]="enderecoForm" (ngSubmit)="salvarNovoEndereco()">
+
+              <div class="form-group">
+                <label class="form-label">Logradouro (Rua, Avenida, etc)</label>
+                <input type="text" formControlName="logradouro" class="form-input" placeholder="Ex: Rua das Flores">
+              </div>
+
+              <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                  <label class="form-label">Número</label>
+                  <input type="text" formControlName="numero" class="form-input" placeholder="Ex: 123">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                  <label class="form-label">CEP</label>
+                  <input type="text" formControlName="cep" class="form-input" placeholder="00000-000" mask="00000-000"
+                    [dropSpecialCharacters]="false">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Bairro</label>
+                <input type="text" formControlName="bairro" class="form-input" placeholder="Ex: Centro">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">ID do Município</label>
+                <input type="number" formControlName="idMunicipio" class="form-input" placeholder="Ex: 1">
+              </div>
+
+              <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="button" class="form-input" style="width: 50%; cursor: pointer; text-align: center;"
+                  (click)="cancelarFormEndereco()">
+                  Cancelar
+                </button>
+                <button type="submit" class="login-button" style="width: 50%;"
+                  [disabled]="enderecoForm.invalid || salvando">
+                  {{ salvando ? 'Salvando...' : 'Salvar Endereço' }}
+                </button>
+              </div>
+
+            </form>
+          </div>
+
         </div>
 
         <div *ngIf="abaSelecionada === 'telefones'">
-          <div *ngFor="let telefone of cliente?.listaTelefone" class="item-lista">
-            <i class="fa-solid fa-mobile-screen item-icone"></i>
-            <div class="item-info">
-              <strong>({{ telefone.codArea }}) {{ telefone.numero }}</strong>
+
+          <div *ngIf="!mostrandoFormTelefone">
+            <div *ngFor="let telefone of cliente?.listaTelefone" class="item-lista">
+              <i class="fa-solid fa-mobile-screen item-icone"></i>
+              <div class="item-info">
+                <strong>({{ telefone.codArea }}) {{ telefone.numero }}</strong>
+              </div>
+              <button class="btn-acao" (click)="excluirTelefone(telefone.id)" [disabled]="salvando">
+                <i class="fa-solid fa-trash"></i>
+              </button>
             </div>
-            <button class="btn-acao"><i class="fa-solid fa-trash"></i></button>
+
+            <div *ngIf="cliente?.listaTelefone?.length === 0"
+              style="text-align: center; margin-bottom: 15px; color: #6b7280;">
+              Você ainda não possui telefones cadastrados.
+            </div>
+
+            <button class="btn-adicionar-novo" (click)="abrirFormTelefone()">+ Adicionar Novo Telefone</button>
           </div>
-          <button class="btn-adicionar-novo">+ Adicionar Novo Telefone</button>
+
+          <div *ngIf="mostrandoFormTelefone">
+            <h3 class="section-title">Novo Telefone</h3>
+
+            <form [formGroup]="telefoneForm" (ngSubmit)="salvarNovoTelefone()">
+
+              <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="width: 30%;">
+                  <label class="form-label">DDD</label>
+                  <input type="text" formControlName="codArea" class="form-input" placeholder="Ex: 63" maxlength="3">
+                </div>
+
+                <div class="form-group" style="flex: 1;">
+                  <label class="form-label">Número</label>
+                  <input type="text" formControlName="numero" class="form-input" placeholder="Ex: 99999-9999">
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="button" class="form-input" style="width: 50%; cursor: pointer; text-align: center;"
+                  (click)="cancelarFormTelefone()">
+                  Cancelar
+                </button>
+                <button type="submit" class="login-button" style="width: 50%;"
+                  [disabled]="telefoneForm.invalid || salvando">
+                  {{ salvando ? 'Salvando...' : 'Salvar Telefone' }}
+                </button>
+              </div>
+
+            </form>
+          </div>
+
         </div>
       </div>
     </div>

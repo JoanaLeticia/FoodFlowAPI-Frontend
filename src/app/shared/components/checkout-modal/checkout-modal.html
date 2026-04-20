@@ -8,8 +8,15 @@
     <div class="modal-body">
       <div class="resumo-carrinho">
         <div *ngFor="let item of itens" class="item-resumo">
-          <span>{{ item.quantidade }}x {{ item.nome }}</span>
-          <span>{{ (item.precoBase * item.quantidade) | currency:'BRL' }}</span>
+          <span>
+            <span *ngIf="item.isSugestaoChefe"
+              style="font-size: 0.7rem; background: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 10px; margin-right: 5px; vertical-align: middle;">Sugestão
+              (-20%)</span>
+            {{ item.quantidade }}x {{ item.nome }}
+          </span>
+
+          <span>{{ ((item.isSugestaoChefe ? (item.precoComDesconto ?? item.precoBase) : item.precoBase) *
+            item.quantidade) | currency:'BRL' }}</span>
         </div>
         <div class="subtotal-resumo">
           <strong>Subtotal:</strong>
@@ -19,15 +26,18 @@
 
       <h3 class="section-title">Como você quer receber seu pedido?</h3>
       <div class="opcoes-atendimento">
-        <div class="opcao" [class.selecionada]="tipoAtendimentoSelecionado === 1" (click)="selecionarTipoAtendimento(1)">
+        <div class="opcao" [class.selecionada]="tipoAtendimentoSelecionado === 1"
+          (click)="selecionarTipoAtendimento(1)">
           <i class="fa-solid fa-store"></i>
           <span>Presencial</span>
         </div>
-        <div class="opcao" [class.selecionada]="tipoAtendimentoSelecionado === 2" (click)="selecionarTipoAtendimento(2)">
+        <div class="opcao" [class.selecionada]="tipoAtendimentoSelecionado === 2"
+          (click)="selecionarTipoAtendimento(2)">
           <i class="fa-solid fa-motorcycle"></i>
           <span>Delivery Próprio</span>
         </div>
-        <div class="opcao" [class.selecionada]="tipoAtendimentoSelecionado === 3" (click)="selecionarTipoAtendimento(3)">
+        <div class="opcao" [class.selecionada]="tipoAtendimentoSelecionado === 3"
+          (click)="selecionarTipoAtendimento(3)">
           <i class="fa-solid fa-mobile-screen-button"></i>
           <span>Delivery por App</span>
         </div>

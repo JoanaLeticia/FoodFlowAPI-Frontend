@@ -1,5 +1,7 @@
 .modal-body-perfil {
     padding: 0;
+    overflow-y: auto;
+    flex: 1;
 }
 
 .abas-perfil {
@@ -126,6 +128,9 @@
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     animation: modalAppear 0.3s ease-out;
     padding-top: 15px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
 }
 
 @keyframes modalAppear {
@@ -352,3 +357,9 @@
         padding: 1rem;
     }
 }
+
+/* Estilização da barra de rolagem */
+.modal-body-reservas::-webkit-scrollbar { width: 8px; }
+.modal-body-reservas::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 0 0 12px 0; }
+.modal-body-reservas::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 10px; }
+.modal-body-reservas::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }

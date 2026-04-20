@@ -34,7 +34,7 @@ export class CheckoutModalComponent implements OnInit {
   constructor(
     private clienteService: ClienteService,
     private parceiroService: ParceiroService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.calcularSubtotal();
@@ -47,10 +47,11 @@ export class CheckoutModalComponent implements OnInit {
   }
 
   calcularSubtotal() {
-    this.subtotal = this.itens.reduce(
-      (total, item) => total + item.precoBase * item.quantidade,
-      0,
-    );
+    this.subtotal = this.itens.reduce((total, item) => {
+      const precoFinal = item.isSugestaoChefe ? (item.precoComDesconto ?? item.precoBase) : item.precoBase;
+      return total + (precoFinal * item.quantidade);
+    }, 0);
+
     this.calcularTaxa();
   }
 
@@ -93,9 +94,7 @@ export class CheckoutModalComponent implements OnInit {
     if (!this.isFormularioValido()) return;
 
     const periodoBruto = this.itens[0]?.periodo;
-
     const periodoTexto = String(periodoBruto);
-
     let idPeriodoCalculado: number;
 
     if (periodoTexto === 'ALMOCO') {
@@ -106,8 +105,15 @@ export class CheckoutModalComponent implements OnInit {
       idPeriodoCalculado = Number(periodoBruto) || 0;
     }
 
+    const idsItensComQuantidade: number[] = [];
+    this.itens.forEach(item => {
+      for (let i = 0; i < item.quantidade; i++) {
+        idsItensComQuantidade.push(item.id);
+      }
+    });
+
     const pedidoDTO = {
-      idsItens: this.itens.map((i) => i.id),
+      idsItens: idsItensComQuantidade,
       idPeriodo: idPeriodoCalculado,
       idTipoAtendimento: this.tipoAtendimentoSelecionado,
       nomeRetirada:

@@ -1,13 +1,6 @@
 <div class="modal-backdrop" (click)="fecharModal()">
-  <div
-    class="modal-content"
-    style="max-width: 700px"
-    (click)="$event.stopPropagation()"
-  >
-    <div
-      class="modal-header"
-      style="display: flex; align-items: center; justify-content: space-between"
-    >
+  <div class="modal-content" style="max-width: 700px" (click)="$event.stopPropagation()">
+    <div class="modal-header" style="display: flex; align-items: center; justify-content: space-between">
       <h2 class="modal-title">Meus Pedidos</h2>
       <button class="close-button" (click)="fecharModal()">&times;</button>
     </div>
@@ -25,13 +18,10 @@
             <span>Data: {{ pedido.dataPedido | date:'dd/MM/yyyy' }}</span>
           </div>
           <div class="pedido-total">
-            <span>{{ pedido.valorTotal | currency:'BRL' }}</span>
+            <span>{{ pedido?.valorTotal | currency:'BRL' }}</span>
           </div>
           <div class="pedido-status">
-            <span
-              class="status-badge"
-              [ngClass]="getStatusClass(pedido.status)"
-            >
+            <span class="status-badge" [ngClass]="getStatusClass(pedido.status)">
               {{ formatarStatus(pedido.status) }}
             </span>
           </div>

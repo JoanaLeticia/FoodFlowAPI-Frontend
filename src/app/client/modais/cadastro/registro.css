@@ -7,21 +7,24 @@
   background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   z-index: 1000;
   backdrop-filter: blur(5px);
-  font-family: "DM Sans", sans-serif;
   overflow-y: auto;
+  padding: 20px 0;
 }
 
 .modal-content {
   background: white;
   border-radius: 12px;
-  width: 100%;
-  width: 800px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh; /* Ocupa no máximo 90% da altura da tela */
+  display: flex;
+  flex-direction: column; /* Organiza header, body e footer em coluna */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   animation: modalAppear 0.3s ease-out;
-  margin: 2rem 0;
+  position: relative;
 }
 
 @keyframes modalAppear {
@@ -85,6 +88,8 @@
 
 .modal-body {
   padding: 0.5rem 2rem 2rem;
+  overflow-y: auto;
+  flex: 1;
 }
 
 .section-form {
@@ -268,4 +273,15 @@
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid #D9D9D9;
+}
+
+@media (max-width: 768px) {
+  .section-form {
+    flex-direction: column; /* Empilha as seções em telas menores */
+    gap: 10px;
+  }
+  
+  .section-infos, .section-endereco {
+    width: 100%;
+  }
 }

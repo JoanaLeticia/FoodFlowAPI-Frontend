@@ -5,14 +5,14 @@ import { ItemCardapio } from "./item-cardapio.model";
 import { StatusPedido } from "./status-pedido.model";
 import { TipoPeriodo } from "./tipo-periodo.model";
 
-export class Pedido {
-    id!: number;
-    cliente!: Cliente;
-    enderecoEntrega!: Endereco;
-    atendimento!: Atendimento;
-    itens: ItemCardapio[] = [];
-    dataPedido?: string;
-    status?: StatusPedido
-    periodo?: TipoPeriodo;
-    valorTotal!: number;
+export interface Pedido {
+  id: number;
+  dataPedido: string;
+  status: string;
+  valorTotal: number;
+  subtotal?: number;
+  taxaEntrega?: number;
+  itens?: any[];
+  itensPedido?: any[];
+  atendimento?: any;
 }

@@ -1,13 +1,6 @@
 <div class="modal-backdrop" (click)="fecharModal()">
-  <div
-    class="modal-content"
-    style="max-width: 650px"
-    (click)="$event.stopPropagation()"
-  >
-    <div
-      class="modal-header"
-      style="display: flex; align-items: center; justify-content: space-between"
-    >
+  <div class="modal-content" style="max-width: 650px" (click)="$event.stopPropagation()">
+    <div class="modal-header" style="display: flex; align-items: center; justify-content: space-between">
       <h2 class="modal-title">Detalhes do Pedido #{{ pedido?.id }}</h2>
       <button class="close-button" (click)="fecharModal()">&times;</button>
     </div>
@@ -22,11 +15,8 @@
             </p>
             <p>
               <strong>Status:</strong>
-              <span
-                class="status-badge"
-                [ngClass]="getStatusClass(pedido.status)"
-                >{{ formatarStatus(pedido.status) }}</span
-              >
+              <span class="status-badge" [ngClass]="getStatusClass(pedido.status)">{{ formatarStatus(pedido.status)
+                }}</span>
             </p>
             <p>
               <strong>Valor Total:</strong> {{ pedido.valorTotal |
@@ -36,12 +26,14 @@
 
           <h3 class="section-title">Itens do Pedido</h3>
           <div class="itens-lista">
-            <div *ngFor="let item of pedido.itens" class="item-detalhe">
-              <span>{{ item.quantidade }}x {{ item.nome }}</span>
-
-              <span
-                >{{ (item.precoBase * item.quantidade) | currency:'BRL' }}</span
-              >
+            <div *ngFor="let item of itensAgrupados" class="item-detalhe">
+              <div class="item-info">
+                <span class="item-quantidade">{{ item.quantidade }}x </span>
+                <span class="item-nome">{{ item.nome }}</span>
+              </div>
+              <div class="item-preco">
+                {{ (item.precoBase * item.quantidade) | currency:'BRL' }}
+              </div>
             </div>
           </div>
         </div>

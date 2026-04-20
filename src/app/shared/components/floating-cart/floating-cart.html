@@ -14,7 +14,15 @@
         <img [src]="item.urlImagem" class="item-imagem">
         <div class="item-info">
           <span class="item-nome">{{ item.nome }}</span>
-          <span class="item-preco">{{ item.precoBase | currency:'BRL' }}</span>
+          <div class="item-preco">
+            <span *ngIf="!item.isSugestaoChefe">{{ item.precoBase | currency:'BRL' }}</span>
+
+            <span *ngIf="item.isSugestaoChefe">
+              <del style="font-size: 0.85em; color: #9ca3af; margin-right: 4px;">{{ item.precoBase | currency:'BRL'
+                }}</del>
+              <strong style="color: #15803d;">{{ item.precoComDesconto | currency:'BRL' }}</strong>
+            </span>
+          </div>
         </div>
         <div class="item-actions">
           <input type="number" [value]="item.quantidade" (change)="atualizarQuantidade(item.id, $event)">
@@ -34,5 +42,5 @@
     <i class="fa-solid fa-cart-shopping" style="margin-left: -1px; margin-top: 2px;"></i>
     <span class="cart-badge" *ngIf="totalItens > 0">{{ totalItens }}</span>
   </div>
-  
+
 </div>

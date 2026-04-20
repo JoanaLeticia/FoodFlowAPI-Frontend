@@ -11,6 +11,8 @@ import { ErrorInterceptor } from './auth/error.interceptor';
 import { provideNativeDateAdapter } from '@angular/material/core'; 
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 
+import { provideEnvironmentNgxMask } from 'ngx-mask';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,6 +25,7 @@ export const appConfig: ApplicationConfig = {
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     provideNativeDateAdapter(),
-    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+    provideEnvironmentNgxMask()
   ]
 };

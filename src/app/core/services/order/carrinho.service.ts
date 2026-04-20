@@ -144,11 +144,13 @@ export class CarrinhoService {
   }
 
   getTotalValor(): number {
-    return parseFloat(
-      this.carrinhoSubject.value
-        .reduce((total, item) => total + item.precoBase * item.quantidade, 0)
-        .toFixed(2),
-    );
+    return this.carrinhoSubject.value.reduce((total, item) => {
+      const precoFinal = item.isSugestaoChefe
+        ? (item.precoComDesconto ?? item.precoBase)
+        : item.precoBase;
+
+      return total + (precoFinal * item.quantidade);
+    }, 0);
   }
 
   adicionarItemParaUsuario(userId: string | number, item: ItemCardapio): void {

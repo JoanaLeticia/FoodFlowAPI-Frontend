@@ -13,6 +13,26 @@ export class PedidoDetalhesModalComponent {
   @Input() pedido: Pedido | null = null;
   @Output() close = new EventEmitter<void>();
 
+  get itensAgrupados(): any[] {
+    const pedidoAny = this.pedido as any;
+    const listaItens = pedidoAny?.itens || pedidoAny?.itensPedido;
+
+    if (!listaItens || !Array.isArray(listaItens)) return [];
+
+    const mapa = new Map<number, any>();
+
+    listaItens.forEach((item: any) => {
+      if (mapa.has(item.id)) {
+        mapa.get(item.id).quantidade++;
+      } else {
+        const qtdInicial = item.quantidade || 1;
+        mapa.set(item.id, { ...item, quantidade: qtdInicial });
+      }
+    });
+
+    return Array.from(mapa.values());
+  }
+
   getStatusClass(status: any): string {
     if (status === undefined || status === null) return 'status-indefinido';
     return 'status-' + String(status).toLowerCase().replace('_', '-');
